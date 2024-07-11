@@ -64,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> findByNameByDescription(String text) {
-        if(text == null || text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
         List<Item> items = itemRepository.findByNameByDescription(text);

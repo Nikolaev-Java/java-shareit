@@ -13,12 +13,12 @@ import ru.practicum.shareit.validationMarker.Marker;
 @Data
 @EqualsAndHashCode(of = "id")
 public class ItemDto {
-    @Null(message = "The ID must be null", groups = Marker.onCreate.class)
+    @Null(message = "The ID must be null", groups = Marker.OnCreate.class)
     private Long id;
-    @NotBlank(message = "The name should not be blank", groups = Marker.onCreate.class)
+    @NotBlank(message = "The name should not be blank", groups = Marker.OnCreate.class)
     private String name;
-    @NotNull(message = "The description should not be null", groups = Marker.onCreate.class)
+    @NotNull(message = "The description should not be null", groups = Marker.OnCreate.class)
     private String description;
-    @NotNull(message = "The available should not be null", groups = Marker.onCreate.class)
+    @NotNull(message = "The available should not be null", groups = Marker.OnCreate.class)
     private Boolean available;
 }

@@ -9,10 +9,10 @@ import java.util.List;
 
 @Validated
 public interface ItemService {
-    @Validated(Marker.onCreate.class)
+    @Validated(Marker.OnCreate.class)
     ItemDto create(@Valid ItemDto itemDto, Long userId);
 
-    @Validated(Marker.onUpdate.class)
+    @Validated(Marker.OnUpdate.class)
     ItemDto update(Long id, @Valid ItemDto itemDto, Long userId);
 
     ItemDto getById(Long id);

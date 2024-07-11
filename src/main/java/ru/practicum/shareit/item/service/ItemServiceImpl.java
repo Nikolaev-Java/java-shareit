@@ -10,6 +10,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.practicum.shareit.item.mappers.ItemMapper.fromDto;
@@ -63,6 +64,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> findByNameByDescription(String text) {
+        if(text == null || text.isEmpty()) {
+            return new ArrayList<>();
+        }
         List<Item> items = itemRepository.findByNameByDescription(text);
         return items.stream().map(ItemMapper::toDto).toList();
     }

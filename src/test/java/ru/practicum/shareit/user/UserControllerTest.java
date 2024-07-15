@@ -27,7 +27,7 @@ class UserControllerTest {
     private MockMvc mvc;
     @Autowired
     private ObjectMapper objectMapper;
-    private final static String URL = "/users";
+    private static final  String URL = "/users";
 
     @Test
     void getUserById_whenUserFound_thenReturn200AndResult() throws Exception {

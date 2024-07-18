@@ -38,8 +38,8 @@ class ItemControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private ItemService itemService;
-    private final static String URL = "/items";
-    private final static String USER_ID = "X-Sharer-User-Id";
+    private static final String URL = "/items";
+    private static final String USER_ID = "X-Sharer-User-Id";
 
     @Test
     @DisplayName("Test create item functionality")
@@ -92,8 +92,8 @@ class ItemControllerTest {
                 .header(USER_ID, 1));
         //then
         result.andExpect(status().isBadRequest())
-                .andExpect(responseBody().
-                        containsErrorValid("Invalid value of the create.itemDto.name parameter: " +
+                .andExpect(responseBody()
+                        .containsErrorValid("Invalid value of the create.itemDto.name parameter: " +
                                 "The name should not be blank"));
     }
 
@@ -111,8 +111,8 @@ class ItemControllerTest {
                 .header(USER_ID, 1));
         //then
         result.andExpect(status().isBadRequest())
-                .andExpect(responseBody().
-                        containsErrorValid("Invalid value of the create.itemDto.description parameter: " +
+                .andExpect(responseBody()
+                        .containsErrorValid("Invalid value of the create.itemDto.description parameter: " +
                                 "The description should not be null"));
     }
 
@@ -130,8 +130,8 @@ class ItemControllerTest {
                 .header(USER_ID, 1));
         //then
         result.andExpect(status().isBadRequest())
-                .andExpect(responseBody().
-                        containsErrorValid("Invalid value of the create.itemDto.available parameter: " +
+                .andExpect(responseBody()
+                        .containsErrorValid("Invalid value of the create.itemDto.available parameter: " +
                                 "The available should not be null"));
     }
 
@@ -148,8 +148,8 @@ class ItemControllerTest {
                 .header(USER_ID, 1));
         //then
         result.andExpect(status().isBadRequest())
-                .andExpect(responseBody().
-                        containsErrorValid("Invalid value of the create.itemDto.id parameter: " +
+                .andExpect(responseBody()
+                        .containsErrorValid("Invalid value of the create.itemDto.id parameter: " +
                                 "The ID must be null"));
     }
 

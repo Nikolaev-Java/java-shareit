@@ -61,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getAllOfOwner(Long userId) {
         checkIfExistsUser(userId);
         List<Item> items = itemRepository.getAllOfOwner(userId);
-        return items.stream().map(itemMapper::toDto).toList();
+        return itemMapper.toDtoList(items);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
             return new ArrayList<>();
         }
         List<Item> items = itemRepository.findByNameByDescription(text);
-        return items.stream().map(itemMapper::toDto).toList();
+        return itemMapper.toDtoList(items);
     }
 
     private void checkIfExistsUser(Long userId) {

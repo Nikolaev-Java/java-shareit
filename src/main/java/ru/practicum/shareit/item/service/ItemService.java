@@ -10,7 +10,6 @@ public interface ItemService {
 
     ItemDto create(ItemDto itemDto, Long userId);
 
-
     ItemDto update(ItemDto itemDto, Long userId);
 
     ItemDto getById(Long id);

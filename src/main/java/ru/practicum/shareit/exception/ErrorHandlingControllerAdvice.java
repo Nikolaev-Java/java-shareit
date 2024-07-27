@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -37,5 +38,12 @@ public class ErrorHandlingControllerAdvice {
     public ErrorResponse handleDuplicatedDataException(final DuplicatedDataException ex) {
         log.warn(ex.getMessage());
         return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(final Exception ex) {
+        log.error(ex.getMessage());
+        return new ErrorResponse(ex.toString());
     }
 }

@@ -3,8 +3,11 @@ package ru.practicum.shareit.item.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.validationMarker.Marker;
 
 /**
@@ -12,6 +15,9 @@ import ru.practicum.shareit.validationMarker.Marker;
  */
 @Data
 @EqualsAndHashCode(of = "id")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemDto {
     @Null(message = "The ID must be null", groups = Marker.OnCreate.class)
     private Long id;

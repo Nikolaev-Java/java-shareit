@@ -10,9 +10,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import ru.practicum.shareit.exception.DuplicatedDataException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mappers.UserMapper;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.utils.DataUtils;
 
 import java.util.List;

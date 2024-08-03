@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto create(ItemDto itemDto, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User with id - " + userId + " not found"));
+                .orElseThrow(() -> new NotFoundException("User with id  - " + userId + " not found"));
         Item item = itemRepository.save(itemMapper.fromDto(itemDto, user));
         return itemMapper.toDto(item);
     }

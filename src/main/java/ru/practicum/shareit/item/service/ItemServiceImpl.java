@@ -97,7 +97,8 @@ public class ItemServiceImpl implements ItemService {
         Map<Long, Booking> lastBookingByItem = lastBookingsByItem.keySet().stream()
                 .map(id -> lastBookingsByItem.get(id).getFirst())
                 .collect(Collectors.toMap(booking -> booking.getItem().getId(), item -> item));
-        Map<Long, Booking> nextBookingByItem = nextBookingsByItem.keySet().stream().map(id -> nextBookingsByItem.get(id).getFirst())
+        Map<Long, Booking> nextBookingByItem = nextBookingsByItem.keySet().stream()
+                .map(id -> nextBookingsByItem.get(id).getFirst())
                 .collect(Collectors.toMap(booking -> booking.getItem().getId(), item -> item));
         List<Comment> comments = commentRepository.findAllByItemIdIn(new ArrayList<>(itemMap.keySet()));
         Map<Long, List<Comment>> commentsByItem = comments.stream()

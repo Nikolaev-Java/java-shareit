@@ -4,14 +4,10 @@ public enum BookingState {
     ALL, CURRENT, PAST, FUTURE, WAITING, REJECTED;
 
     public static BookingState parseString(String state) {
-        return switch (state.toUpperCase()) {
-            case "ALL" -> ALL;
-            case "CURRENT" -> CURRENT;
-            case "PAST" -> PAST;
-            case "FUTURE" -> FUTURE;
-            case "WAITING" -> WAITING;
-            case "REJECTED" -> REJECTED;
-            default -> throw new IllegalArgumentException("Unknown state: " + state);
-        };
+        try {
+            return valueOf(state.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unknown state: " + state);
+        }
     }
 }

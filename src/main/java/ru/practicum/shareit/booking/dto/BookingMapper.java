@@ -12,6 +12,7 @@ import java.util.List;
 public class BookingMapper {
 
     public Booking toNewBooking(NewBookingDtoRequest dto, Item item, User booker) {
+        if (dto == null) return null;
         return Booking.builder()
                 .item(item)
                 .booker(booker)
@@ -22,6 +23,7 @@ public class BookingMapper {
     }
 
     public BookingDtoResponse toBookingDtoResponse(Booking booking) {
+        if (booking == null) return null;
         return BookingDtoResponse.builder()
                 .id(booking.getId())
                 .item(BookingDtoResponse.ItemDtoResponse.builder()

@@ -90,23 +90,17 @@ public class ItemServiceImpl implements ItemService {
                 .findAllByItemsLastBooking(new ArrayList<>(itemMap.keySet()), LocalDateTime.now());
         List<Booking> nextBookings = bookingRepository
                 .findAllByItemsNextBooking(new ArrayList<>(itemMap.keySet()), LocalDateTime.now());
-        Map<Long, List<Booking>> lastBookingsByItem = lastBookings.stream()
-                .collect(Collectors.groupingBy(booking -> booking.getItem().getId()));
-        Map<Long, List<Booking>> nextBookingsByItem = nextBookings.stream()
-                .collect(Collectors.groupingBy(booking -> booking.getItem().getId()));
-        Map<Long, Booking> lastBookingByItem = lastBookingsByItem.keySet().stream()
-                .map(id -> lastBookingsByItem.get(id).getFirst())
-                .collect(Collectors.toMap(booking -> booking.getItem().getId(), item -> item));
-        Map<Long, Booking> nextBookingByItem = nextBookingsByItem.keySet().stream()
-                .map(id -> nextBookingsByItem.get(id).getFirst())
-                .collect(Collectors.toMap(booking -> booking.getItem().getId(), item -> item));
+        Map<Long, Booking> next = nextBookings.stream()
+                .collect(Collectors.toMap(booking -> booking.getItem().getId(), booking -> booking));
+        Map<Long, Booking> last = lastBookings.stream()
+                .collect(Collectors.toMap(booking -> booking.getItem().getId(), booking -> booking));
         List<Comment> comments = commentRepository.findAllByItemIdIn(new ArrayList<>(itemMap.keySet()));
         Map<Long, List<Comment>> commentsByItem = comments.stream()
                 .collect(Collectors.groupingBy(comment -> comment.getItem().getId()));
         return itemMap.keySet().stream()
                 .map(id -> itemMapper.toInfoDto(itemMap.get(id),
-                        lastBookingByItem.get(id),
-                        nextBookingByItem.get(id),
+                        last.get(id),
+                        next.get(id),
                         commentsByItem.get(id)))
                 .toList();
     }

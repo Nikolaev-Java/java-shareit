@@ -34,18 +34,22 @@ public interface BookingRepository extends JpaRepository<Booking, Long>, Queryds
     Optional<Booking> findByItemNextBooking(Long itemId, LocalDateTime now);
 
     @Query(value = """
-            select b from Booking as b where b.item.id in ?1
-            and b.status='APPROVED'
-            and b.startTime < ?2
-            order by b.startTime desc
+            select b from Booking as b
+            join(select b.item.id as item, max(b.startTime) as firstStartTime
+            from Booking as b
+            where b.startTime < ?2 and b.status='APPROVED'
+            group by b.item.id) as subquery on b.item.id=subquery.item and b.startTime = subquery.firstStartTime
+            where b.item.id in ?1
             """)
     List<Booking> findAllByItemsLastBooking(List<Long> itemIds, LocalDateTime now);
 
     @Query(value = """
-            select b from Booking as b where b.item.id in ?1
-            and b.status='APPROVED'
-            and b.startTime > ?2
-            order by b.startTime asc
+            select b from Booking as b
+            join(select b.item.id as item, min(b.startTime) as firstStartTime
+            from Booking as b
+            where b.startTime > ?2 and b.status='APPROVED'
+            group by b.item.id) as subquery on b.item.id=subquery.item and b.startTime = subquery.firstStartTime
+            where b.item.id in ?1
             """)
     List<Booking> findAllByItemsNextBooking(List<Long> itemIds, LocalDateTime now);
 

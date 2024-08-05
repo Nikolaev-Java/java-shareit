@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.item.dto.CommentDtoRequest;
+import ru.practicum.shareit.item.dto.CommentDtoResponse;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemInfoDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.validationMarker.Marker;
 
@@ -44,17 +47,28 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemDto getById(@PathVariable Long id) {
-        return itemService.getById(id);
+    public ItemInfoDto getById(@PathVariable Long id,
+                               @RequestHeader(USER_ID) long userId) {
+        return itemService.getById(id, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getAllOfOwner(@RequestHeader(USER_ID) long userId) {
+    public List<ItemInfoDto> getAllOfOwner(@RequestHeader(USER_ID) long userId) {
         return itemService.getAllOfOwner(userId);
     }
 
     @GetMapping("/search")
     public List<ItemDto> findByNameByDescription(@RequestParam String text) {
         return itemService.findByNameByDescription(text);
+    }
+
+    @PostMapping("/{id}/comment")
+    @Validated(Marker.OnCreate.class)
+    public CommentDtoResponse createComment(@PathVariable Long id,
+                                            @RequestBody @Valid CommentDtoRequest commentDtoRequest,
+                                            @RequestHeader(USER_ID) long userId) {
+        commentDtoRequest.setItemId(id);
+        commentDtoRequest.setUserId(userId);
+        return itemService.addComment(commentDtoRequest);
     }
 }

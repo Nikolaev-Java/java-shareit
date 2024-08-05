@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import ru.practicum.shareit.exception.DuplicatedDataException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mappers.UserMapper;
-import ru.practicum.shareit.user.repository.InMemoryUserRepository;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.utils.DataUtils;
 
 import java.util.List;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-    private InMemoryUserRepository userRepository = Mockito.mock(InMemoryUserRepository.class);
+    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private UserServiceImpl userService;
 
     @BeforeEach
@@ -42,7 +43,7 @@ class UserServiceImplTest {
     public void givenUserDto_whenCreteUser_thenReturnUserDto() {
         //given
         User user = DataUtils.getUserTestPersistence(1);
-        given(userRepository.create(any(User.class))).willReturn(user);
+        given(userRepository.save(any(User.class))).willReturn(user);
         UserDto userDto = DataUtils.getUserDtoTestTransient(1);
         //when
         UserDto userDtoCreated = userService.create(userDto);
@@ -56,12 +57,12 @@ class UserServiceImplTest {
     public void givenUserDto_whenCreteUserWithDuplicateEmail_thenThrowException() {
         //given
         User user = DataUtils.getUserTestPersistence(1);
-        given(userRepository.getEmails()).willReturn(List.of(user.getEmail()));
+        given(userRepository.save(any(User.class))).willThrow(new DataIntegrityViolationException(""));
         UserDto userDto = DataUtils.getUserDtoTestTransient(1);
         //when
         assertThrows(DuplicatedDataException.class, () -> userService.create(userDto));
         //then
-        verify(userRepository, never()).create(any(User.class));
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
@@ -69,7 +70,7 @@ class UserServiceImplTest {
     public void givenUserDto_whenGetUserById_thenUserDtoIsReturned() {
         //given
         User user = DataUtils.getUserTestPersistence(1);
-        given(userRepository.getById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
         //when
         UserDto userReturned = userService.getById(user.getId());
         //then
@@ -80,7 +81,7 @@ class UserServiceImplTest {
     @DisplayName("Test get user by incorrect id functionality")
     public void givenUserDto_whenGetUserByIncorrectId_thenThrowException() {
         //given
-        given(userRepository.getById(anyLong())).willReturn(Optional.empty());
+        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
         //when
         //then
         assertThrows(NotFoundException.class, () -> userService.getById(999));
@@ -92,7 +93,7 @@ class UserServiceImplTest {
         //given
         User user1 = DataUtils.getUserTestPersistence(1);
         User user2 = DataUtils.getUserTestPersistence(2);
-        given(userRepository.getAll()).willReturn(List.of(user1, user2));
+        given(userRepository.findAll()).willReturn(List.of(user1, user2));
         //when
         List<UserDto> usersReturned = userService.getAll();
         //then
@@ -106,9 +107,9 @@ class UserServiceImplTest {
         //given
         String updateName = "update Name";
         User userUpdateName = DataUtils.getUserTestPersistence(1);
-        given(userRepository.getById(anyLong())).willReturn(Optional.of(userUpdateName));
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(userUpdateName));
         userUpdateName.setName(updateName);
-        given(userRepository.update(anyLong(), any(User.class))).willReturn(userUpdateName);
+        given(userRepository.save(any(User.class))).willReturn(userUpdateName);
         UserDto userDto = DataUtils.getUserDtoTestPersistence(1);
         userDto.setName(updateName);
         //when
@@ -122,12 +123,12 @@ class UserServiceImplTest {
     @DisplayName("Test user update with incorrect id functionality")
     public void givenUserDto_whenUpdateUserWithIncorrectId_thenThrowException() {
         //given
-        given(userRepository.getById(anyLong())).willReturn(Optional.empty());
+        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
         //when
         //then
         assertThrows(NotFoundException.class,
                 () -> userService.update(1, DataUtils.getUserDtoTestPersistence(1)));
-        verify(userRepository, never()).update(anyLong(), any(User.class));
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
@@ -136,25 +137,25 @@ class UserServiceImplTest {
         //given
         String updateEmail = "update@test.com";
         User user = DataUtils.getUserTestPersistence(1);
-        given(userRepository.getById(anyLong())).willReturn(Optional.of(user));
-        given(userRepository.getEmails()).willReturn(List.of(updateEmail));
+        given(userRepository.findById(anyLong())).willReturn(Optional.of(user));
+        given(userRepository.save(any(User.class))).willThrow(new DataIntegrityViolationException(""));
         UserDto userDto = DataUtils.getUserDtoTestPersistence(1);
         userDto.setEmail(updateEmail);
         //when
         //then
         assertThrows(DuplicatedDataException.class, () -> userService.update(userDto.getId(), userDto));
-        verify(userRepository, never()).update(anyLong(), any(User.class));
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
     @DisplayName("Test delete user functionality")
     public void givenUserDto_whenDeleteUser_thenUserIsDeleted() {
         //given
-        given(userRepository.getById(anyLong())).willReturn(Optional.empty());
+        given(userRepository.findById(anyLong())).willReturn(Optional.empty());
         //when
         userService.delete(1L);
         //then
-        verify(userRepository, times(1)).delete(anyLong());
+        verify(userRepository, times(1)).deleteById(anyLong());
         assertThrows(NotFoundException.class, () -> userService.getById(1L));
     }
 }

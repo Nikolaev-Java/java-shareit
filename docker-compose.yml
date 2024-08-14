@@ -1,14 +1,13 @@
 services:
   db:
     image: postgres:16.1
+    container_name: shareit-db
     ports:
       - "6432:5432"
-    volumes:
-      - ./volumes/postgres:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=shareit
-      - POSTGRES_USER=shareit
       - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=dbuser
+      - POSTGRES_DB=shareit
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s

@@ -32,6 +32,7 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public BookingDtoResponse createBooking(NewBookingDtoRequest dto) {
         User booker = userRepository.findById(dto.getBookerId())
                 .orElseThrow(() -> new NotFoundException("User Not Found"));

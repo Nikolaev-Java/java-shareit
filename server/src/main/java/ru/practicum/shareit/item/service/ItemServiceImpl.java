@@ -40,6 +40,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository itemRequestRepository;
 
     @Override
+    @Transactional
     public ItemDto create(ItemDto itemDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User with id  - " + userId + " not found"));
@@ -53,6 +54,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto update(ItemDto itemDto, Long userId) {
         checkIfExistsUser(userId);
         Item item = itemRepository.findById(itemDto.getId()).orElseThrow(
@@ -139,7 +141,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkIfExistsUser(Long userId) {
-        if (userRepository.findById(userId).isEmpty()) {
+        if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id - " + userId + " not found");
         }
     }

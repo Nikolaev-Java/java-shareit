@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
@@ -24,6 +25,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public ItemRequestDto createItemRequest(ItemRequestDto itemRequestDto) {
         User user = userRepository.findById(itemRequestDto.getUserId())
                 .orElseThrow(() -> new NotFoundException("User Not Found"));

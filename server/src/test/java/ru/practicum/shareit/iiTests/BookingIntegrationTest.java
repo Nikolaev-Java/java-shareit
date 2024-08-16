@@ -49,8 +49,8 @@ public class BookingIntegrationTest {
         Booking booking = Booking.builder()
                 .id(1L)
                 .status(Status.APPROVED)
-                .startTime(LocalDateTime.of(2024, 8, 14, 0, 0))
-                .endTime(LocalDateTime.of(2024, 8, 15, 0, 0))
+                .startTime(LocalDateTime.of(2024, 8, 16, 0, 0))
+                .endTime(LocalDateTime.of(2024, 8, 17, 0, 0))
                 .booker(booker)
                 .item(item)
                 .build();

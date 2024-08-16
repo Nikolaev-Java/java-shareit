@@ -90,6 +90,7 @@ class ItemServiceImplTest {
         item.setOwner(owner);
         given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
         given(userRepository.findById(anyLong())).willReturn(Optional.of(owner));
+        given(userRepository.existsById(anyLong())).willReturn(true);
         item.setName(updateName);
         given(itemRepository.save(any(Item.class))).willReturn(item);
         ItemDto itemDtoUpdate = DataUtils.getItemDtoTestPersistence(1);
@@ -131,6 +132,7 @@ class ItemServiceImplTest {
         //given
         User owner = DataUtils.getUserTestPersistence(1);
         given(userRepository.findById(anyLong())).willReturn(Optional.of(owner));
+        given(userRepository.existsById(anyLong())).willReturn(true);
         Item item = DataUtils.getItemTestPersistence(1);
         item.setOwner(owner);
         given(itemRepository.findById(anyLong())).willReturn(Optional.of(item));
@@ -179,6 +181,7 @@ class ItemServiceImplTest {
         Item item3 = DataUtils.getItemTestPersistence(3);
         item3.setOwner(owner2);
         given(itemRepository.findAllByOwnerId(owner1.getId())).willReturn(List.of(item1, item2));
+        given(userRepository.existsById(anyLong())).willReturn(true);
         //when
         List<ItemInfoDto> allOfOwner1Returned = itemService.getAllOfOwner(owner1.getId());
         List<ItemInfoDto> allOfOwner2Empty = itemService.getAllOfOwner(owner2.getId());
